@@ -26,7 +26,7 @@ class GroqLanguageModel():
         self.llm = None
         self.embedding_model = None
 
-        self.system = "You are a helpful assistant"
+        self.system = "You are a helpful assistant that provides detailed responses."
         self.human = "{text}"
         self.prompt = ChatPromptTemplate.from_messages([("system", self.system), ("human", self.human)])
         self.output_parser = None
@@ -36,7 +36,7 @@ class GroqLanguageModel():
         self.rag_prompt = None
         self.retriever = None
         self.document_chain = None
-        self.rag_system = """Answer the following question based on the provided context:
+        self.rag_system = """You are a helpful assistant that provides detailed responses. Answer the following question using the provided context. Do not state that extra context was provided:
 
                         <context>
                         {context}
@@ -90,12 +90,16 @@ class GroqLanguageModel():
     def set_model(self, model_name):
         if model_name == 'mixtral-8x7b':
             self.llm_model_name = 'mixtral-8x7b-32768'
+            self.max_tokens = 32768
         elif model_name == 'llama-70b':
             self.llm_model_name = 'llama2-70b-4096'
+            self.max_tokens = 4096
         elif model_name == 'gemma-7b':
             self.llm_model_name = 'gemma-7b-it'
+            self.max_tokens = 8192
         else:
             self.llm_model_name = 'mixtral-8x7b-32768'
+            self.max_tokens = 32768
 
     def set_system_prompt(self, prompt):
         self.system = prompt
