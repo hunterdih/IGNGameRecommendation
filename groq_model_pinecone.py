@@ -24,6 +24,7 @@ class GroqLanguageModel():
         self.llm_model_name = llm_model_name
         self.embed_model_name = embed_model_name
         self.index_name = index_name
+        self.pinecone_db = None
 
         self.llm = None
         self.embedding_model = None
@@ -51,8 +52,8 @@ class GroqLanguageModel():
 
         self.text_splitter = CharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
 
-        self.initialize_llm_models()
-        self.initialize_llm_models()
+        self.initialize_llm_model()
+        self.initialize_embed_model()
         self.initialize_db()
 
     def initialize_db(self):
@@ -66,7 +67,7 @@ class GroqLanguageModel():
         self.embedding_model = CohereEmbeddings(model=self.embed_model_name,
                                                 cohere_api_key=cohere_api_key)
 
-    def initialize_llm_models(self):
+    def initialize_llm_model(self):
         groq_api_key = os.environ.get('GROQ_API_KEY')
         self.llm = ChatGroq(temperature=0,
                             groq_api_key=groq_api_key,

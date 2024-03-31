@@ -1,14 +1,17 @@
 import tkinter as tk
 from tkinter import filedialog
-
+from groq_model_faiss import *
 # TODO: define model options
-model_options = ["Model 1", "Model 2", "Model 3"]
-
+model_options = ['mixtral-8x7b', 'llama-70b', 'gemma-7b']
+groq_model = GroqLanguageModel()
 # Functions setting variables...
 def set_csv_path():
     csv_paths = filedialog.askopenfilenames(filetypes=[("Select CSV file", "*.csv")])
     for path in csv_paths:
+        #selected_csv.set(path.split("/")[-1])
+        selected_csv_path.set(path)
         selected_csv.set(path.split("/")[-1])
+        groq_model.add_to_db(selected_csv_path.get())
 
 def set_model(value):
     selected_model.set(value)
@@ -34,16 +37,22 @@ def submit_prompt():
     
     # TODO: Run the prompt on both models and display the results in the text boxes
     # To retrieve info discussed in meeting, use widget getters...
-    csv_path = selected_csv.get()
+    csv_path = selected_csv_path.get()
     model = selected_model.get()
     prompt = prompt_entry.get()
 
+    # Set model to use:
+    groq_model.set_model(model)
+    # Get response and rag based response
+    non_rag_response, rag_response = groq_model.get_dual_response(prompt)
+
     # update RAG and Non-RAG canvas
-    rag_text.insert(tk.END, "Rag response after submitting response\n" * 1000)
-    nonrag_text.insert(tk.END, "Non-Rag response after submitting response\n" * 1000)
+    rag_text.insert(tk.END, "Rag response after submitting response:\n" + "\n" + rag_response + "\n")
+    nonrag_text.insert(tk.END, "Non-Rag response after submitting response:\n" + "\n" + non_rag_response + "\n")
 
 # Create the root window...
 root = tk.Tk()
+
 root.title("Prompt Comparison Tool")
 root.columnconfigure(0, weight=1)
 root.columnconfigure(1, weight=1)
@@ -58,6 +67,8 @@ root.rowconfigure(3, weight=2)
 
 # Place widgets in the root window...
 selected_csv = tk.StringVar(root)
+selected_csv_path = tk.StringVar(root)
+
 select_csv_button = tk.Button(root, text="Select CSV Files", command=set_csv_path)
 select_csv_button.grid(row=0, column=0, padx=20, pady=10, sticky='ew') 
 selected_csv_label = tk.Label(root, textvariable=selected_csv)
