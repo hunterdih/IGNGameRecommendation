@@ -101,21 +101,20 @@ class GroqLanguageModel():
             self.llm_model_name = 'mixtral-8x7b-32768'
             self.max_tokens = 32768
 
+        self.initialize_llm_model()
+
     def set_system_prompt(self, prompt):
         self.system = prompt
 
     def get_non_rag_response(self, prompt):
-        self.initialize_llm_model()
         self.response = self.non_rag_chain.invoke({"text": prompt})
         return self.response
 
     def get_rag_response(self, prompt):
-        self.initialize_llm_model()
         self.rag_response = self.rag_chain.invoke({"input": prompt})["answer"]
         return self.rag_response
 
     def get_dual_response(self, prompt):
-        self.initialize_llm_model()
         self.response = self.non_rag_chain.invoke({"text":prompt})
         self.rag_response = self.rag_chain.invoke({"input":prompt})["answer"]
 

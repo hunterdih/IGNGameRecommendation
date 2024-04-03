@@ -3,6 +3,7 @@ from tkinter import filedialog
 from groq_model_faiss import *
 # TODO: define model options
 model_options = ['mixtral-8x7b', 'llama-70b', 'gemma-7b']
+current_model = 'NA'
 groq_model = GroqLanguageModel()
 # Functions setting variables...
 def set_csv_path():
@@ -18,6 +19,7 @@ def set_model(value):
 
 def submit_prompt():
 
+    global current_model
     # Attempt at UI error handling
     if not selected_csv.get():
         error_message.set("Please select a CSV file")
@@ -41,14 +43,17 @@ def submit_prompt():
     model = selected_model.get()
     prompt = prompt_entry.get()
 
-    # Set model to use:
-    groq_model.set_model(model)
+    if not model == current_model:
+        # Set model to use:
+        current_model = model
+        groq_model.set_model(current_model)
+
     # Get response and rag based response
     non_rag_response, rag_response = groq_model.get_dual_response(prompt)
 
     # update RAG and Non-RAG canvas
-    rag_text.insert(tk.END, "Rag response after submitting response:\n" + "\n" + rag_response + "\n")
-    nonrag_text.insert(tk.END, "Non-Rag response after submitting response:\n" + "\n" + non_rag_response + "\n")
+    rag_text.insert(tk.END, "\n" + rag_response + "\n")
+    nonrag_text.insert(tk.END, "\n" + non_rag_response + "\n")
 
 # Create the root window...
 root = tk.Tk()
@@ -92,10 +97,13 @@ rag_frame = tk.Frame(root, width=400, height=200, bg='white')
 rag_frame.grid(row=3, column=0, columnspan=3, padx=20, pady=10, sticky='nsew')
 rag_text = tk.Text(rag_frame, width=20, height=5, wrap=tk.WORD)
 rag_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+#rag_text.config(state=tk.DISABLED)
 
 nonrag_frame = tk.Frame(root, width=400, height=200, bg='white')
 nonrag_frame.grid(row=3, column=3, columnspan=3, padx=20, pady=10, sticky='nsew')
 nonrag_text = tk.Text(nonrag_frame, width=20, height=5, wrap=tk.WORD)
 nonrag_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
+#nonrag_text.config(state=tk.DISABLED)
+rag_text.insert(tk.END, "Rag output:")
+nonrag_text.insert(tk.END, "Non-Rag output:")
 root.mainloop()
