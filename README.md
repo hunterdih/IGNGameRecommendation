@@ -3,9 +3,7 @@ Notable requirements for running all code present in the IGNGameRecommendation r
 1. Ensure all libraries in the requirements.txt file are installed using:
    pip install -r requirements.txt
 
-2. Two api keys are needed to run the frontend.py file.
-   
-   A Cohere api key, groq api key. and optionally a pinecone api key. API keys can be acquired by making an account at with the services below:
+2. Two api keys are needed to run the frontend.py file; a Cohere api key, groq api key. and optionally a pinecone api key. API keys can be acquired by making an account at with the services below:
    
    https://console.groq.com/keys
    
