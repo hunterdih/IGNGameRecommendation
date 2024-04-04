@@ -24,10 +24,10 @@ Notable requirements for running all code present in the IGNGameRecommendation r
 
    To set the registry variables on a Linux/Unix OS
    
-   export GROQ_API_KEY=<your-api-key-here>
+   export GROQ_API_KEY=your-api-key-here
    
-   export COHERE_API_KEY=<your-api-key-here>
+   export COHERE_API_KEY=your-api-key-here
    
-   export PINECONE_API_KEY=<your-api-key-here>
+   export PINECONE_API_KEY=your-api-key-here
 
 6. To run any of the scripts included in the repo, clone the repo to the IDE of choice, and run scripts within the repo. Executing scripts at the command line is not supported.
